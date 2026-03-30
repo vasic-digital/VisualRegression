@@ -1,0 +1,94 @@
+# AGENTS.md - Multi-Agent Coordination Guide
+
+## Overview
+
+This document provides guidance for AI agents working with the `digital.vasic.visualregression` module.
+
+## Module Identity
+
+- **Module path**: `digital.vasic.visualregression`
+- **Language**: Go 1.24+
+- **Dependencies**: `github.com/stretchr/testify` (tests only)
+- **Scope**: Generic, reusable visual regression detection. No application-specific logic.
+
+## Package Responsibilities
+
+| Package | Owner Concern | Agent Must Not |
+|---------|--------------|----------------|
+| `pkg/regression` | Pairwise comparison, JSON parsing, severity classification | Add hardcoded LLM providers, import non-stdlib production deps |
+
+## Coordination Rules
+
+### 1. Interface Contracts
+
+The `VisionProvider` interface is a stability boundary. Breaking changes require explicit human approval:
+
+- `Vision(ctx, image, prompt) (*VisionResponse, error)`
+- `SupportsVision() bool`
+
+### 2. JSON Response Contract
+
+The `comparisonPrompt` template and `comparisonJSON` struct define the LLM interaction contract. Changes to the expected JSON shape must be backwards-compatible.
+
+### 3. Test Requirements
+
+- All tests use `testify/assert` and `testify/require`.
+- Test naming convention: `Test<Struct>_<Method>_<Scenario>`.
+- Mock providers use `atomic.Int32` for thread-safe call counting.
+- Race detector must pass: `go test ./... -race`.
+
+## Agent Workflow
+
+### Before Making Changes
+
+```bash
+go build ./...
+go test ./... -count=1 -race
+```
+
+### After Making Changes
+
+```bash
+gofmt -w .
+go vet ./...
+go test ./... -count=1 -race
+```
+
+### Commit Convention
+
+```
+<type>(<package>): <description>
+
+# Examples:
+feat(regression): add image hash deduplication
+fix(regression): handle empty JSON response from provider
+test(regression): add five-device pairwise coverage
+```
+
+## Boundaries
+
+### What Agents May Do
+
+- Fix bugs in any package.
+- Add tests for uncovered code paths.
+- Refactor internals without changing exported APIs.
+- Add new exported methods that extend existing types.
+- Update documentation to match code.
+
+### What Agents Must Not Do
+
+- Break existing exported interfaces or method signatures.
+- Add application-specific logic (this is a generic library).
+- Ship concrete LLM provider implementations.
+- Introduce new external dependencies without human approval.
+- Modify `go.mod` without explicit instruction.
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `pkg/regression/visual.go` | All production code |
+| `pkg/regression/visual_test.go` | All tests |
+| `go.mod` | Module definition |
+| `README.md` | User-facing documentation |
+| `CLAUDE.md` | Agent build/test guidance |
