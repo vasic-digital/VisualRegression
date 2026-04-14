@@ -1,0 +1,7 @@
+Commit: 618c746ff8b9e0948cdfadd0cb62d39dedc48a35
+Branch: main
+618c746 Add GitHub Sponsors button for vasic-digital
+eb1eb42 security: Add mandatory NO SUDO/ROOT execution constraint
+331f6aa docs: add ARCHITECTURE.md, .env gitignore for v2.1.0
+461fc7d feat: initial release — cross-device visual regression detection
+
