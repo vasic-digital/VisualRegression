@@ -1,0 +1,20 @@
+# helix-deps.yaml — visual_regression Submodule-Dependency Manifest
+# Per HelixConstitution §11.4.31 (Submodule-Dependency-Manifest Mandate).
+#
+# visual_regression is a leaf Go module (digital.vasic.visualregression); go.mod requires only testify.
+# Evidence: no own-org (vasic-digital/*, HelixDevelopment/*) module is
+# required, replaced or imported in the package manifest or sources; only
+# third-party dependencies are declared there.
+#
+# Schema reference: <constitution-submodule>/Constitution.md §11.4.31.
+
+schema_version: 1
+
+# No own-org dependencies: honest manifest of a leaf submodule.
+deps: []
+
+transitive_handling:
+  recursive: true
+  conflict_resolution: operator-required
+
+language_specific_subtree: false

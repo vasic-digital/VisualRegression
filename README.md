@@ -132,3 +132,7 @@ Any LLM with vision capabilities can back this interface (OpenAI GPT-4V, Google 
 ## License
 
 Apache-2.0
+
+## Dependency manifest
+
+Own-org dependencies (§11.4.31) are declared in `helix-deps.yaml` (this submodule has none).
